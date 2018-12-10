@@ -11,15 +11,15 @@ public class HelloWorldServlet extends HttpServlet {
     @Override
     protected void doGet( HttpServletRequest req, HttpServletResponse resp ) throws ServletException, IOException {
         System.out.println("You will see this in the console");
-//        resp.getWriter().println("<h1>Hello World!</h1>");
 
-        PrintWriter out = resp.getWriter();
+//        PrintWriter out = resp.getWriter(); // 1) You can use this too instead of getWriter()
 
         String name = req.getParameter("name");
 
         if (name == null) {
             name = "World";
         }
-            out.printf("<h1>Hello %s!</h1>", name);
+//            out.printf("<h1>Hello, %s!</h1>", name); // 2) Use this with PrintWriter if desired
+            resp.getWriter().printf("<h1>Hello, %s!</h1>", name);
     }
 }
