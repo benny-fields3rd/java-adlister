@@ -37,9 +37,8 @@ public class MySQLAdsDao implements Ads{
         Statement stmt;
         long lastInsertID = 0;
         String insertQuery = String.format(
-                "INSERT INTO ads (id, user_id, title, description) VALUES (%d, %d, '%s', '%s')", // use single quotes for strings
+                "INSERT INTO ads (user_id, title, description) VALUES (%d, '%s', '%s')", // use single quotes for strings
                 //otherwise it becomes part of the SQL statement
-                ad.getId(),
                 ad.getUserId(),
                 ad.getTitle(),
                 ad.getDescription());
