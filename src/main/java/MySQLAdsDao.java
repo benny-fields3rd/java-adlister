@@ -5,9 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MySQLAdsDao implements Ads{
-    private Connection connection = null;
+    private Connection connection;
 
     public MySQLAdsDao(Config config) {
+        if(connection == null) // Daniel added this portion on walktrhough
         try {
             DriverManager.registerDriver(new Driver());
             connection = DriverManager.getConnection(
@@ -18,6 +19,7 @@ public class MySQLAdsDao implements Ads{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        System.out.println(connection);
     }
     @Override
     public List<Ad> all() {
@@ -34,7 +36,9 @@ public class MySQLAdsDao implements Ads{
     public Long insert(Ad ad){
         Statement stmt;
         long lastInsertID = 0;
-        String insertQuery = String.format("INSERT INTO ads (id, user_id, title, description) VALUES ('%d', '%d', '%s', '%s')",
+        String insertQuery = String.format(
+                "INSERT INTO ads (id, user_id, title, description) VALUES (%d, %d, '%s', '%s')", // use single quotes for strings
+                //otherwise it becomes part of the SQL statement
                 ad.getId(),
                 ad.getUserId(),
                 ad.getTitle(),
@@ -42,7 +46,6 @@ public class MySQLAdsDao implements Ads{
         try {
             stmt = connection.createStatement();
             stmt.executeUpdate(insertQuery, stmt.RETURN_GENERATED_KEYS);
-
             ResultSet rs = stmt.getGeneratedKeys();
             if (rs.next()){
                 lastInsertID = rs.getLong(1);
@@ -65,4 +68,15 @@ public class MySQLAdsDao implements Ads{
         }
         return ads;
     }
+
+    public static void main( String[] args ) {
+        MySQLAdsDao dao = new MySQLAdsDao(new Config());
+        List<Ad> ads = dao.all();
+        System.out.println(ads.get(1).getTitle());
+        for (Ad ad : ads){
+            System.out.println();
+        }
+
+    }
 }
+
